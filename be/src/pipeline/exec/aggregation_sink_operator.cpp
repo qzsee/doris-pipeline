@@ -39,8 +39,8 @@ Status AggSinkOperator::prepare(RuntimeState* state) {
 }
 
 Status AggSinkOperator::open(RuntimeState* state) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     RETURN_IF_ERROR(Operator::open(state));
-    _agg_node->alloc_resource(state);
     return Status::OK();
 }
 

@@ -37,6 +37,7 @@ Status ScanOperator::init(ExecNode* exec_node, RuntimeState* state) {
 // VScanNode::init call the VScanNode::_register_runtime_filter, gen the generate VScanNode::_runtime_filter_ctxs
 Status ScanOperator::prepare(RuntimeState* state) {
     RETURN_IF_ERROR(Operator::prepare(state));
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     // init profile for runtime filter
     for (auto& rf_ctx : _scan_node->_runtime_filter_ctxs) {
         rf_ctx.runtime_filter->init_profile(_scan_node->runtime_profile());
@@ -51,6 +52,7 @@ Status ScanOperator::prepare(RuntimeState* state) {
 }
 
 Status ScanOperator::open(RuntimeState* state) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     RETURN_IF_ERROR(Operator::open(state));
     RETURN_IF_ERROR(_scan_node->_acquire_runtime_filter(false));
     RETURN_IF_ERROR(_scan_node->_process_conjuncts());
@@ -80,6 +82,7 @@ bool ScanOperator::can_read() {
 }
 
 Status ScanOperator::get_block(RuntimeState* state, vectorized::Block* block, bool* eos) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     SCOPED_TIMER(_runtime_profile->total_time_counter());
     // 参考vscan node
     if (state->is_cancelled()) {

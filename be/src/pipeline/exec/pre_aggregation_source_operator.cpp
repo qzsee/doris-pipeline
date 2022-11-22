@@ -28,8 +28,7 @@ PreAggSourceOperator::PreAggSourceOperator(OperatorBuilder* templ,
 
 // for poc
 Status PreAggSourceOperator::prepare(RuntimeState* state) {
-    _mem_tracker = std::make_unique<MemTracker>("PreAggSourceOperator:" + _runtime_profile->name(),
-                                                _runtime_profile.get());
+    RETURN_IF_ERROR(Operator::prepare(state));
     return Status::OK();
 }
 

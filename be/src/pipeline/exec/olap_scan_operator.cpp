@@ -32,7 +32,6 @@ Status OlapScanOperator::init(ExecNode* exec_node, RuntimeState* state) {
 
 Status OlapScanOperator::prepare(RuntimeState* state) {
     RETURN_IF_ERROR(ScanOperator::prepare(state));
-    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     return Status::OK();
 }
 

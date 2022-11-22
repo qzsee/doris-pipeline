@@ -35,8 +35,8 @@ Status SortSinkOperator::init(doris::ExecNode* node, doris::RuntimeState* state)
 }
 
 Status SortSinkOperator::open(doris::RuntimeState* state) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     RETURN_IF_ERROR(Operator::open(state));
-    RETURN_IF_ERROR(_sort_node->alloc_resource(state));
     return Status::OK();
 }
 

@@ -52,6 +52,7 @@ bool SortSourceOperator::can_read() {
 }
 
 Status SortSourceOperator::get_block(RuntimeState* state, vectorized::Block* block, bool* eos) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     return _sort_node->pull(state, block, eos);
 }
 

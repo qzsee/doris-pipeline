@@ -33,11 +33,14 @@ Status ExchangeSourceOperator::init(ExecNode* exec_node, RuntimeState* state) {
 }
 
 Status ExchangeSourceOperator::prepare(RuntimeState* state) {
+    RETURN_IF_ERROR(Operator::prepare(state));
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     _exchange_node->_rows_returned_counter = _rows_returned_counter;
     return Status::OK();
 }
 
 Status ExchangeSourceOperator::open(RuntimeState* state) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     return _exchange_node->open(state);
 }
 
@@ -46,6 +49,7 @@ bool ExchangeSourceOperator::can_read() {
 }
 
 Status ExchangeSourceOperator::get_block(RuntimeState* state, vectorized::Block* block, bool* eos) {
+    SCOPED_CONSUME_MEM_TRACKER(mem_tracker());
     SCOPED_TIMER(_runtime_profile->total_time_counter());
     auto st = _exchange_node->get_next(state, block, eos);
     if (block) {

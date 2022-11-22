@@ -117,6 +117,8 @@ public:
 
     OperatorPtr get_root() { return _root; }
 
+    RuntimeState* runtime_state() { return _state; }
+
     static constexpr auto THREAD_TIME_SLICE = 100'000'000L;
 
 private:

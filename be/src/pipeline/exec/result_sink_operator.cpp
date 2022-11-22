@@ -30,6 +30,7 @@ Status ResultSinkOperator::init(const TDataSink& tsink) {
 }
 
 Status ResultSinkOperator::prepare(RuntimeState* state) {
+    RETURN_IF_ERROR(Operator::prepare(state));
     return _sink->prepare(state);
 }
 
@@ -50,6 +51,7 @@ Status ResultSinkOperator::sink(RuntimeState* state, vectorized::Block* block, b
         _num_rows_returned += block->rows();
         COUNTER_SET(_rows_returned_counter, _num_rows_returned);
     }
+    STOP_CHECK_THREAD_MEM_TRACKER_LIMIT();
     return _sink->send(state, block);
 }
 
