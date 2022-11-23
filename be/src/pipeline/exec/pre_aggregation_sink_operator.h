@@ -28,10 +28,11 @@ class Block;
 } // namespace vectorized
 
 namespace pipeline {
-class AggSinkOperatorTemplate;
-class AggSinkOperator : public Operator {
+class PreAggSinkOperatorTemplate;
+class PreAggSinkOperator : public Operator {
 public:
-    AggSinkOperator(AggSinkOperatorTemplate* operator_template, vectorized::AggregationNode*);
+    PreAggSinkOperator(PreAggSinkOperatorTemplate* operator_template, vectorized::AggregationNode*,
+                    std::shared_ptr<AggContext>);
 
     Status init(ExecNode* exec_node, RuntimeState* state = nullptr) override;
     Status prepare(RuntimeState*) override;
@@ -47,12 +48,16 @@ public:
 
 private:
     vectorized::AggregationNode* _agg_node;
+    vectorized::Block _preagg_block = vectorized::Block();
+
     int64_t get_child_return_rows() { return _child->rows_returned(); }
+    std::shared_ptr<AggContext> _agg_context;
 };
 
-class AggSinkOperatorTemplate : public OperatorTemplate {
+class PreAggSinkOperatorTemplate : public OperatorTemplate {
 public:
-    AggSinkOperatorTemplate(int32_t, const std::string&, vectorized::AggregationNode*);
+    PreAggSinkOperatorTemplate(int32_t, const std::string&, vectorized::AggregationNode*,
+                            std::shared_ptr<AggContext>);
 
     OperatorPtr build_operator() override;
 
@@ -61,6 +66,7 @@ public:
 
 private:
     vectorized::AggregationNode* _agg_node;
+    std::shared_ptr<AggContext> _agg_context;
 };
 
 } // namespace pipeline
