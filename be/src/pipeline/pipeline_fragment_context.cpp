@@ -291,8 +291,8 @@ Status PipelineFragmentContext::_build_pipelines(ExecNode* node, PipelinePtr cur
     case TPlanNodeType::AGGREGATION_NODE: {
         auto* agg_node = assert_cast<vectorized::AggregationNode*>(node);
         auto new_pipe = add_pipeline();
-        auto agg_ctx = std::make_shared<AggContext>();
         RETURN_IF_ERROR(_build_pipelines(node->child(0), new_pipe));
+        auto agg_ctx = std::make_shared<AggContext>();
         if (agg_node->is_streaming_preagg()) {
             OperatorTemplatePtr pre_agg_sink = std::make_shared<PreAggSinkOperatorTemplate>(
                     next_operator_template_id(), "PreAggSinkOperator", agg_node, agg_ctx);

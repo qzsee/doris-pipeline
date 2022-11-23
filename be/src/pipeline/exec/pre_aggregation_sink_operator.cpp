@@ -116,7 +116,7 @@ PreAggSinkOperatorTemplate::PreAggSinkOperatorTemplate(int32_t id, const std::st
           _agg_context(std::move(agg_context)) {}
 
 OperatorPtr PreAggSinkOperatorTemplate::build_operator() {
-    return std::make_shared<AggSinkOperator>(this, _agg_node, _agg_context);
+    return std::make_shared<PreAggSinkOperator>(this, _agg_node, _agg_context);
 }
 
 // use final aggregation source operator
