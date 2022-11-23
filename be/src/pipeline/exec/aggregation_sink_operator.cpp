@@ -51,8 +51,6 @@ Status AggSinkOperator::sink(RuntimeState* state, vectorized::Block* in_block, b
     if (!_agg_node->is_streaming_preagg()) {
         RETURN_IF_ERROR(_agg_node->sink(state, in_block, eos));
     }
-    // TODO: remove it after we split the stream agg and normal agg
-    _agg_node->_executor.update_memusage();
     return Status::OK();
 }
 

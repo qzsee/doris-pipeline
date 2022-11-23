@@ -92,7 +92,6 @@ Status PreAggSinkOperator::sink(RuntimeState* state, vectorized::Block* in_block
         }
         _agg_context->set_finish();
     }
-    // TODO: remove it after we split the stream agg and normal agg
     _agg_node->_executor.update_memusage();
     return Status::OK();
 }
@@ -109,8 +108,8 @@ Status PreAggSinkOperator::close(RuntimeState* state) {
 ///////////////////////////////  operator template  ////////////////////////////////
 
 PreAggSinkOperatorTemplate::PreAggSinkOperatorTemplate(int32_t id, const std::string& name,
-                                                 vectorized::AggregationNode* exec_node,
-                                                 std::shared_ptr<AggContext> agg_context)
+                                                       vectorized::AggregationNode* exec_node,
+                                                       std::shared_ptr<AggContext> agg_context)
         : OperatorTemplate(id, name, exec_node),
           _agg_node(exec_node),
           _agg_context(std::move(agg_context)) {}
