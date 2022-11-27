@@ -47,6 +47,7 @@
 #include "vec/runtime/vdata_stream_mgr.h"
 #include "vec/sink/vdata_stream_sender.h"
 #include "vec/sink/vresult_sink.h"
+#include "common/logging.h"
 
 using apache::thrift::transport::TTransportException;
 using apache::thrift::TException;
@@ -131,11 +132,12 @@ Status PipelineFragmentContext::prepare(const doris::TExecPlanFragmentParams& re
     _runtime_state = std::make_unique<RuntimeState>(params, request.query_options,
                                                     _query_ctx->query_globals, _exec_env);
     _runtime_state->set_query_fragments_ctx(_query_ctx.get());
+    LOG(INFO) << "shi : " << " query_mem_tracker  : " << _query_ctx->query_mem_tracker;
     _runtime_state->set_query_mem_tracker(_query_ctx->query_mem_tracker);
     _runtime_state->set_tracer(std::move(tracer));
 
     // TODO should be combine with plan_fragment_executor.prepare funciton
-    SCOPED_ATTACH_TASK(_runtime_state.get());
+    SCOPED_ATTACH_TASK(get_runtime_state());
     _runtime_state->init_scanner_mem_trackers();
     _runtime_state->runtime_filter_mgr()->init();
     _runtime_state->set_be_number(request.backend_num);
