@@ -32,7 +32,7 @@ public:
 
     std::unique_ptr<vectorized::Block> get_free_block();
 
-    void return_free_block(std::unique_ptr<vectorized::Block>);
+    void put_free_block(std::unique_ptr<vectorized::Block> block);
 
     bool has_data_or_finished();
     Status get_block(std::unique_ptr<vectorized::Block>* block);
@@ -57,9 +57,9 @@ private:
     std::mutex _transfer_lock;
     std::list<std::pair<std::unique_ptr<vectorized::Block>, size_t>> _blocks_queue;
 
-    bool _data_exhausted = false;
-    bool _is_finished = false;
-    bool _is_canceled = false;
+    std::atomic<bool> _data_exhausted = false;
+    std::atomic<bool> _is_finished = false;
+    std::atomic<bool> _is_canceled = false;
 
     // int64_t just for counter of profile
     int64_t _cur_bytes_in_queue = 0;

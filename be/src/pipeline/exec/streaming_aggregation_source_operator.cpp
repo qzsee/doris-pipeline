@@ -48,7 +48,7 @@ Status StreamingAggSourceOperator::get_block(RuntimeState* state, vectorized::Bl
         } else {
             block->swap(*agg_block);
             agg_block->clear_column_data(_agg_node->row_desc().num_materialized_slots());
-            _agg_context->return_free_block(std::move(agg_block));
+            _agg_context->put_free_block(std::move(agg_block));
         }
     } else {
         RETURN_IF_ERROR(_agg_node->pull(state, block, &eos));
